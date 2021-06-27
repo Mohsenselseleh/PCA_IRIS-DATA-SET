@@ -1,0 +1,84 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+1. Apply PCA on the independent variables (first four columns) of the iris dataset by using
+prcomp function from stats library
+```{r}
+data(iris)
+iris_ind <-iris[,1:4]
+iris.pca.rawdata <- prcomp(iris_ind, scale = FALSE, center= FALSE)
+iris.pca.rawdata
+```
+Please note that you can get the rotation matrix (eigen vectors) as follows
+```{r}
+iris.pca.rawdata$rotation
+`
+``
+```
+2. Get the transformed raw data.
+
+```{r}
+head(iris.pca.rawdata$x)
+
+``
+```
+
+
+
+Or, alternatively;
+
+```{r}
+head(as.matrix(iris_ind)%*%iris.pca.rawdata$rotation)
+```
+
+3. Plot the proportion of variance explained by each component. How many components
+will you choose to capture maximum variability in the dataset?
+```{r}
+plot(iris.pca.rawdata, type = "l", main='without data normalization')
+...
+```
+
+The heuristic rule is to choose components that form the elbow of the plot and drop
+the components after the elbow. So, we can drop components 3 and 4 without losing
+significant information.
+
+```{r}
+
+```
+4. Apply normalization (scaling and centering) to your data. Recalculate PCA with normalized data. What is the effect of normalizing on the PCA results?
+```{r}
+iris.pca.normdata <- prcomp(iris_ind, scale = TRUE, center= TRUE)
+iris.pca.normdata$rotation
+```
+```{r}
+head(iris.pca.normdata$x)
+
+```
+
+```{r}
+plot(iris.pca.normdata, type = "l", main='with data normalization')
+
+```
+5. Check the correlations of the original, transformed and normalized transformed data.
+
+
+```{r}
+cor(iris_ind)
+```
+Correlations of the transformed data:
+
+```{r}
+cor(iris.pca.rawdata$x)
+
+```
+Correlations of the normalized transformed data:
+```{r}
+cor(iris.pca.normdata$x)
+```
+
+
